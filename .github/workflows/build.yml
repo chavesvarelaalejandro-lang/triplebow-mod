@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -19,8 +19,10 @@ jobs:
         run: unzip -q ./*.zip -d proyecto
 
       - name: Compilar
-        working-directory: proyecto/triplebow-forge-1.20.1
         run: |
+          DIR=$(dirname "$(find proyecto -name gradlew | head -n 1)")
+          echo "Proyecto encontrado en: $DIR"
+          cd "$DIR"
           chmod +x gradlew
           ./gradlew build --no-daemon
 
@@ -28,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: triplebow-jar
-          path: proyecto/triplebow-forge-1.20.1/build/libs/triplebow-1.0.0.jar
+          path: proyecto/**/build/libs/triplebow-1.0.0.jar
